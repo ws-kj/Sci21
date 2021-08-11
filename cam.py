@@ -4,6 +4,9 @@ import urllib
 import requests
 import time
 import sys
+import socket
+
+import globs
 
 url = 'http://192.168.0.111/html/cam_pic.php' 
 
@@ -27,6 +30,15 @@ fthick = 1
 m_coord = (5, 20)
 c_coord = (5, 45)
 
+port = 11111
+host = '192.168.0.111'
+
+socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+def init_socket():
+    socket.connect((host, port))
+    socket.sendall(b'Connecting')
+    
 def init_cam():
     cv2.namedWindow('Camera', 16) #no buttons
     cv2.setWindowProperty('Camera', cv2.WND_PROP_FULLSCREEN, 1)
@@ -79,8 +91,19 @@ def cam_loop():
     if key == ord('q'):
         sys.exit()
 
+def process_input():
+    pass
+
+def send_data():
+    msg = "{} {}".format(cur_mode, cur_comm)
+    socket.sendall(bytes(msg, 'utf-8'))  
+
 if __name__ == '__main__':
     init_cam()
+    init_socket()
     while 1:
+        process_input()
+        send_data()
         cam_loop()
     cv2.destroyAllWindows()
+    socket.close()
