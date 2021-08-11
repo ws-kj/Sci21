@@ -6,18 +6,9 @@ import time
 import sys
 import socket
 
-import globs
+from globs import *
 
 url = 'http://192.168.0.111/html/cam_pic.php' 
-
-M_MOVE = 0
-M_RAISE = 1
-M_EXTEND = 2
-
-C_NONE = -1
-C_FORWARD = 0
-C_LEFT = 1
-C_RIGHT = 2
 
 cur_mode = M_MOVE
 cur_comm = C_NONE
