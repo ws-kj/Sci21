@@ -1,6 +1,6 @@
 import socket
 
-import globs
+import hardware
 
 host = '192.168.0.111'
 port = 11111
@@ -26,6 +26,7 @@ def poll_socket():
                         mode = int(arr[0])
                         comm = int(arr[1])
                         print(mode, comm)
+                        hardware.command(mode, comm)
         finally:
             conn.close()
 
