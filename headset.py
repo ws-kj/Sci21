@@ -27,6 +27,16 @@ host = '192.168.0.111'
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 def init_socket():
+
+    while True:
+        try:
+            urllib.request.urlopen('http://google.com')
+            print("connected to internet")
+            break
+        except:
+            time.sleep(1)
+            continue
+
     socket.connect((host, port))
     socket.sendall(b'Connecting')
     
