@@ -6,3 +6,8 @@ C_NONE = -1
 C_FORWARD = 0
 C_LEFT = 1
 C_RIGHT = 2
+
+E_NONE = -1
+E_BLINK = 0
+E_LEFT = 1
+E_RIGHT = 2

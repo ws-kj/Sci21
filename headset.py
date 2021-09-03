@@ -7,6 +7,7 @@ import sys
 import socket
 
 from globs import *
+import eye
 
 url = 'http://192.168.0.111/html/cam_pic.php' 
 
@@ -104,6 +105,7 @@ if __name__ == '__main__':
     init_socket()
     while 1:
         process_input()
+        eye_loop()
         send_data()
         cam_loop()
     cv2.destroyAllWindows()

@@ -1,16 +1,28 @@
 import cv2
 import numpy as np
 
-cap = cv2.VideoCapture(0)
+from picamera.array import PiRGBArray
+from picamera import PiCamera
 
-width = cap.get(3)
-height = cap.get(4)
+camera = PiCamera()
+rawCap = PiRGBArray(camera)
 
-while True:
-    ret, frame = cap.read()
-    if ret is False: 
-        break
-    
+from globs import *
+
+#cap = cv2.VideoCapture(0)
+
+#width = cap.get(3)
+#height = cap.get(4)
+
+def eye_loop():
+#    ret, frame = cap.read()
+#    if ret is False: 
+#        return E_NONE
+
+    camera.capture(rawCap, format="bgr")
+    frame = rawCap.array
+    height, width, _ = frame.shape
+
     roi = cv2.flip(frame, 1)
 #    roi = frame[235: 250, 325: 356]
     rows, cols, _ = roi.shape
@@ -36,22 +48,22 @@ while True:
         ml = width/3
         mr = ml * 2
 
+        ret = E_NONE
+
         if w > 3*h:
-            print("CLOSED")
+            ret = E_BLINK
         else:
             if cx < ml:
-             print("LEFT")
+                ret = E_LEFT
             if cx > mr:
-                print("RIGHT")
+                ret = E_RIGHT
 
         break
 
 #    cv2.imshow("Threshold", threshold)
 #    cv2.imshow("gray roi", gray_roi)
     cv2.imshow("Roi", roi)
-    key = cv2.waitKey(30)
-    if key == 27: 
-        break
+    return ret
 
 cv2.destroyAllWindows()
 
