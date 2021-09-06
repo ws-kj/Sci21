@@ -1,2 +1,2 @@
 # Neurassist
-Using brainwaves and AR to enable those with physical disabilities gain more autonomy 
+Using eye-tracking, computer vision, and AR to enable the paralyzed and disabled to live with more autonomy. 
