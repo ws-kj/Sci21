@@ -11,3 +11,4 @@ E_NONE = -1
 E_BLINK = 0
 E_LEFT = 1
 E_RIGHT = 2
+E_UP = 3

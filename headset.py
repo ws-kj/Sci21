@@ -11,9 +11,6 @@ import eye
 
 url = 'http://192.168.0.111/html/cam_pic.php' 
 
-cur_mode = M_MOVE
-cur_comm = C_NONE
-
 font = cv2.FONT_HERSHEY_SIMPLEX
 fscale = 0.75
 fcolor = (0, 255, 0)
@@ -45,7 +42,7 @@ def init_cam():
     cv2.namedWindow('Camera', 16) #no buttons
     cv2.setWindowProperty('Camera', cv2.WND_PROP_FULLSCREEN, 1)
 
-def cam_loop():
+def cam_loop(cur_comm):
     resp = urllib.request.urlopen(url)
     img_arr = numpy.array(bytearray(resp.read()), dtype=numpy.uint8)
     img = cv2.imdecode(img_arr, -1)
@@ -91,22 +88,36 @@ def cam_loop():
     cv2.imshow('Camera', img)
     key = cv2.waitKey(1)
     if key == ord('q'):
+        cv2.destroyAllWindows()
+        socket.close()
         sys.exit()
 
-def process_input():
-    pass
+def process_input(com):
+    print(com)
+    if com == E_NONE:
+        cur_comm = C_NONE
+    elif com == E_UP:
+        cur_comm = C_FORWARD
+    elif com == E_LEFT:
+        cur_comm = C_LEFT
+    elif com == E_RIGHT:
+        cur_comm = C_RIGHT
+    elif com == E_BLINK:
+        cur_comm = C_NONE
+        
+    return cur_comm
 
-def send_data():
+def send_data(cur_comm):
     msg = "{} {}".format(cur_mode, cur_comm)
     socket.sendall(bytes(msg, 'utf-8'))  
 
 if __name__ == '__main__':
     init_cam()
     init_socket()
+    cur_mode = M_MOVE
     while 1:
-        process_input()
-        eye_loop()
-        send_data()
-        cam_loop()
+        com = process_input(eye.eye_loop())
+        cam_loop(com)
+        send_data(com)
     cv2.destroyAllWindows()
     socket.close()
