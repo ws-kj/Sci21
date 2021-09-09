@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-
+import sys
 from globs import *
 
 cap = cv2.VideoCapture(0)
@@ -8,18 +8,29 @@ cap = cv2.VideoCapture(0)
 width = cap.get(3)
 height = cap.get(4)
 
-def eye_loop():
-    ret, frame = cap.read()
-#    if ret is False: 
-#        return E_NONE
+def ce(event, x, y, flags, events):
+    if event == cv2.EVENT_LBUTTONDOWN:
+        print("coords   x: ", x, " y: ", y)
 
-    roi = cv2.flip(frame, 1)
-    roi = frame[190: 265, 275: 455]
+
+while 1:
+    ret, frame = cap.read()
+    if ret is False: 
+        continue
+
+    roi = frame
+
+    #roi = cv2.flip(frame, 1)
+    roi = frame[190: 265, 275: 455] # frame[140: 290, 170: 250]
+
+    width = 455-275
+    height = 265-190
+
     rows, cols, _ = roi.shape
     gray_roi = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
     gray_roi = cv2.GaussianBlur(gray_roi, (7, 7), 0)
 
-    _, threshold = cv2.threshold(gray_roi, 65, 255, cv2.THRESH_BINARY_INV)
+    _, threshold = cv2.threshold(gray_roi, 20, 255, cv2.THRESH_BINARY_INV)
 
     contours  = cv2.findContours(threshold, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)[0]
     contours = sorted(contours, key=lambda x: cv2.contourArea(x), reverse=True)
@@ -37,7 +48,10 @@ def eye_loop():
 
         boundary_left = width/3
         boundary_right = boundary_left * 2
-        boundary_up = height/4 
+        boundary_up = height/4
+
+        
+
         ret = E_NONE
 
         if w > 3*h:
@@ -50,14 +64,18 @@ def eye_loop():
             if cy < boundary_up:
                 ret = E_UP
 
-#        print(ret)
-
+        print("\r", ret)
+        sys.stdout.flush()
         break
 
-#    cv2.imshow("Threshold", threshold)
-#    cv2.imshow("gray roi", gray_roi)
-#    cv2.imshow("Roi", roi)
-    return ret
+    #cv2.imshow("Threshold", threshold)
+    #cv2.imshow("gray roi", gray_roi)
+    cv2.imshow("Roi", roi)
+    cv2.setMouseCallback('Roi', ce)
+
+    key = cv2.waitKey(30)
+    if key == 27:
+        break
 
 cv2.destroyAllWindows()
 
