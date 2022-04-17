@@ -13,6 +13,8 @@ def ce(event, x, y, flags, events):
         print("coords   x: ", x, " y: ", y)
 
 
+
+
 while 1:
     ret, frame = cap.read()
     if ret is False: 
@@ -21,9 +23,9 @@ while 1:
     roi = frame
 
     #roi = cv2.flip(frame, 1)
-    roi = frame[190: 265, 275: 455] # frame[140: 290, 170: 250]
+    roi = frame[190: 265, 250: 425] # frame[140: 290, 170: 250]
 
-    width = 455-275
+    width = 425-250
     height = 265-190
 
     rows, cols, _ = roi.shape
@@ -70,6 +72,16 @@ while 1:
 
     #cv2.imshow("Threshold", threshold)
     #cv2.imshow("gray roi", gray_roi)
+
+    cv2.namedWindow('Roi', cv2.WND_PROP_FULLSCREEN) #no buttons
+    cv2.setWindowProperty('Roi', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+    width, height, depth = roi.shape
+    scaleW = float(1440)/float(width)
+    scaleH = float(900)/float(height)
+    nx, ny = width*scaleW, height*scaleH
+    print(str(scaleW) + " " + str(scaleH))
+    roi = cv2.resize(roi, (1440, 900))
+    
     cv2.imshow("Roi", roi)
     cv2.setMouseCallback('Roi', ce)
 

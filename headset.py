@@ -9,7 +9,7 @@ import socket
 from globs import *
 import eye
 
-url = 'http://192.168.0.111/html/cam_pic.php' 
+url = 'http://192.168.0.119/html/cam_pic.php' 
 
 font = cv2.FONT_HERSHEY_SIMPLEX
 fscale = 0.75
@@ -20,27 +20,22 @@ m_coord = (5, 20)
 c_coord = (5, 45)
 
 port = 11111
-host = '192.168.0.111'
+host = '192.168.0.119'
 
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
+scount = 0;
+sturn = 500;
+sroi = True
+
 def init_socket():
-
-    while True:
-        try:
-            urllib.request.urlopen('http://google.com')
-            print("connected to internet")
-            break
-        except:
-            time.sleep(1)
-            continue
-
     socket.connect((host, port))
     socket.sendall(b'Connecting')
     
 def init_cam():
-    cv2.namedWindow('Camera', 16) #no buttons
-    cv2.setWindowProperty('Camera', cv2.WND_PROP_FULLSCREEN, 1)
+    cv2.namedWindow('Camera', cv2.WND_PROP_FULLSCREEN) #no buttons
+    cv2.setWindowProperty('Camera', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+
 
 def cam_loop(cur_comm):
     resp = urllib.request.urlopen(url)
@@ -83,9 +78,17 @@ def cam_loop(cur_comm):
 
     img = cv2.putText(img, comm_text, c_coord, font, fscale, fcolor, fthick, cv2.LINE_AA)
 
-    img = cv2.flip(img, 1)  
+    img = cv2.flip(img, 1) 
+   
+    width, height, depth = img.shape
+    scaleW = float(cv2.getWindowImageRect("Camera")[2])/float(width)
+    scaleH = float(cv2.getWindowImageRect("Camera")[3])/float(height)
+    nx, ny = width*scaleW, height*scaleH
+    #img = cv2.resize(img, nx, ny)
 
+    cv2.setWindowProperty('Camera', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
     cv2.imshow('Camera', img)
+
     key = cv2.waitKey(1)
     if key == ord('q'):
         cv2.destroyAllWindows()
@@ -112,6 +115,9 @@ def send_data(cur_comm):
     socket.sendall(bytes(msg, 'utf-8'))  
 
 if __name__ == '__main__':
+
+    eye.eye_cal()
+
     init_cam()
     init_socket()
     cur_mode = M_MOVE
