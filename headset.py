@@ -81,11 +81,14 @@ def cam_loop(cur_comm):
     img = cv2.flip(img, 1) 
    
     width, height, depth = img.shape
-    scaleW = float(cv2.getWindowImageRect("Camera")[2])/float(width)
-    scaleH = float(cv2.getWindowImageRect("Camera")[3])/float(height)
+#    scaleW = float(cv2.getWindowImageRect("Camera")[2])/float(width)
+#    scaleH = float(cv2.getWindowImageRect("Camera")[3])/float(height)
+    scaleW = float(480)/float(width)
+    scaleH = float(320)/float(height)
     nx, ny = width*scaleW, height*scaleH
     #img = cv2.resize(img, nx, ny)
 
+    cv2.namedWindow('Camera', cv2.WND_PROP_FULLSCREEN) #no buttons
     cv2.setWindowProperty('Camera', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
     cv2.imshow('Camera', img)
 

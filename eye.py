@@ -112,8 +112,8 @@ def eye_cal():
         cv2.namedWindow('Roi', cv2.WND_PROP_FULLSCREEN) #no buttons
         cv2.setWindowProperty('Roi', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
         width, height, depth = roi.shape
-        scaleW = float(1440)/float(width)
-        scaleH = float(900)/float(height)
+        scaleW = float(480)/float(width)
+        scaleH = float(320)/float(height)
         nx, ny = width*scaleW, height*scaleH
         print(str(scaleW) + " " + str(scaleH))
         roi = cv2.resize(roi, (1440, 900))
