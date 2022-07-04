@@ -1,2 +1,4 @@
 # Neurassist
-Using eye-tracking, computer vision, and AR to enable the paralyzed and disabled to live with more autonomy. 
+Eye-tracking controlled vehicle using computer vision and AR. 2022 ISEF finalist project.
+
+<a href="https://projectboard.world/isef/finalist-booth/robo057t---pupil-movement-controlled-vehicle">ISEF Project Board</a>
